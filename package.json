@@ -27,5 +27,10 @@
   "bugs": {
     "url": "https://github.com/lututui/discord-dbd-shrine-of-secrets/issues"
   },
-  "homepage": "https://github.com/lututui/discord-dbd-shrine-of-secrets#readme"
+  "homepage": "https://github.com/lututui/discord-dbd-shrine-of-secrets#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "discord.js": "^11.4.2",
+    "request-promise": "^4.2.2"
+  }
 }
