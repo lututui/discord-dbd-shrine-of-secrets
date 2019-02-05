@@ -1,0 +1,31 @@
+{
+  "name": "discord-dbd-sos",
+  "version": "1.0.0",
+  "description": "A Dead by Daylight Shrine of Secrets bot for discord",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lututui/discord-dbd-shrine-of-secrets.git"
+  },
+  "keywords": [
+    "dbd",
+    "discord",
+    "dead",
+    "by",
+    "daylight",
+    "dead-by-daylight",
+    "shrine",
+    "of",
+    "secrets",
+    "shrine-of-secrets"
+  ],
+  "author": "lututui",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/lututui/discord-dbd-shrine-of-secrets/issues"
+  },
+  "homepage": "https://github.com/lututui/discord-dbd-shrine-of-secrets#readme"
+}
