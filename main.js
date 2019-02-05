@@ -13,7 +13,7 @@ function create() {
 
     Client.login(process.env.SESSION_DISCORD_TOKEN);
 
-    Client.on('ready', refresh);
+    Client.on('ready', () => onReady(Client));
     Client.on('message', (message) => onMessage(message, Client));
 }
 
@@ -98,6 +98,11 @@ function onMessage(message, Client) {
             message.channel.send(mb);
         }
     }
+}
+
+function onReady(Client) {
+    Client.user.setActivity('Dead by Daylight', { type : 'PLAYING' });
+    refresh();
 }
 
 function attachWikiLink(pageName) {
