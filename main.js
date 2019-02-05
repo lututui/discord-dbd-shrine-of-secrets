@@ -39,7 +39,7 @@ class Perk {
 function create() {
     const Client = new Discord.Client();
 
-    Client.login(process.argv[2]);
+    Client.login(process.env.SESSION_DISCORD_TOKEN);
 
     Client.on('ready', refresh);
     Client.on('message', (message) => onMessage(message, Client));
