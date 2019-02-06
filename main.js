@@ -77,6 +77,20 @@ function onMessage(message, Client) {
 
     let mb = new Discord.RichEmbed();
 
+    if (command === "help") {
+        mb.setTitle("Shrine of Secrets Bot Help");
+        mb.setThumbnail(Client.user.avatarURL);
+        mb.setDescription("Command list and descriptions. If you have any issues, report [here](https://github.com/lututui/discord-dbd-shrine-of-secrets/issues)");
+        mb.addBlankField();
+
+        mb.addField("help", "Shows help");
+        mb.addField("shrine", "Displays shrine of secrets content and refresh timer");
+        mb.addField("refresh", "Displays shrine of secrets refresh timer");
+
+        message.channel.send(mb);
+        return;
+    }
+
     if (command === "shrine") {
         mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
         message.channel.send(mb);
@@ -91,11 +105,13 @@ function onMessage(message, Client) {
             
             message.channel.send(mb);
         });
+        return;
     }
 
     if (command === "refresh") {
         mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
         message.channel.send(mb);
+        return;
     }
 }
 
