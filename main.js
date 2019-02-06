@@ -66,37 +66,36 @@ function refresh() {
 }
 
 function onMessage(message, Client) {
-    if (message.isMentioned(Client.user)) {
-        if (refresh_timer === undefined || perk_list.length === 0) {
-            message.channel.send("Not available right now, try again in a minute or so");
-            return;
-        }
+    const command = message.content.split(Client.user.toString()).slice(1).join().trim();
 
-        let mb = new Discord.RichEmbed();
-        const msgs = [];
+    if (!command) return;
+    
+    if (refresh_timer === undefined || perk_list.length === 0) {
+        message.channel.send("Not available right now, try again in a minute or so");
+        return;
+    }
 
-        if (message.content.includes("shrine")) {
-            mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
-            msgs.push(mb);
+    let mb = new Discord.RichEmbed();
+
+    if (command === "shrine") {
+        mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
+        message.channel.send(mb);
+
+        perk_list.forEach(perk => {
+            mb = new Discord.RichEmbed();
+
+            mb.setImage(perk.getTeachableImage(), true);
+            mb.addField("Perk", attachWikiLink(perk.getName()), true);
+            mb.addField("Cost", perk.getCost(), true);
+            mb.addField("Unique Of", attachWikiLink(perk.getOwner()), true);
             
-            for (let i = 0; i < 4; i++) {
-                mb = new Discord.RichEmbed();
-
-                mb.setImage(perk_list[i].getTeachableImage(), true);
-                mb.addField("Perk", attachWikiLink(perk_list[i].getName()), true);
-                mb.addField("Cost", perk_list[i].getCost(), true);
-                mb.addField("Unique Of", attachWikiLink(perk_list[i].getOwner()), true);
-
-                msgs.push(mb);
-            }
-
-            msgs.forEach(element => {message.channel.send(element)});
-        }
-
-        if (message.content.includes("refresh")) {
-            mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
             message.channel.send(mb);
-        }
+        });
+    }
+
+    if (command === "refresh") {
+        mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
+        message.channel.send(mb);
     }
 }
 
