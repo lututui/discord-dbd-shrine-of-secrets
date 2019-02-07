@@ -1,0 +1,32 @@
+{
+    "default" : {
+        "The Shrine of Secrets refreshes in "                                   :   "0",
+        " hours"                                                                :   "1",
+        " days"                                                                 :   "2",
+        "Not available right now, try again in a minute or so"                  :   "3",
+        "Shrine of Secrets Bot Help"                                            :   "4",
+        "Command list and descriptions. If you have any issues, report [here]"  :   "5",
+        "Shows help"                                                            :   "6",
+        "Displays shrine of secrets content and refresh timer"                  :   "7",
+        "Displays shrine of secrets refresh timer"                              :   "8",
+        "Shrine of Secrets"                                                     :   "9",
+        "Perk"                                                                  :   "10",
+        "Cost"                                                                  :   "11",
+        "Unique Of"                                                             :   "12"
+    },
+    "pt-br" : {
+        "0"     :   "O Santuário dos Segredos atualizará em ",
+        "1"     :   " horas",
+        "2"     :   " dias",
+        "3"     :   "Indisponível no momento, tente novamente mais tarde",
+        "4"     :   "Ajuda do Bot Shrine of Secrets",
+        "5"     :   "Lista e descrição de comandos. Se encontrar algum bug, reporte [aqui]",
+        "6"     :   "Mostra a ajuda",
+        "7"     :   "Mostra o conteúdo do Santuário e o tempo para atualizar",
+        "8"     :   "Mostra o tempo para atualizar o Santuário",
+        "9"     :   "Santuário dos Segredos",
+        "10"    :   "Vantagens",
+        "11"    :   "Preço",
+        "12"    :   "Único de"
+    }
+}

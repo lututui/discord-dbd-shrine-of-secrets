@@ -2,11 +2,12 @@ const Discord = require('discord.js');
 const RequestPromise = require('request-promise');
 const Cheerio = require('cheerio');
 
+const Translate = require('./src/Translate.js');
 const Perk = require('./src/Perk.js');
 
 const DBD_WIKI_PREFIX = 'https://deadbydaylight.gamepedia.com/';
 const DBD_WIKI_SOS_PAGE = DBD_WIKI_PREFIX + 'Shrine_of_Secrets';
-const REFRESH_PREFIX = 'The Shrine of Secrets refreshes in ';
+const REPORT_ISSUE_LINK = 'https://github.com/lututui/discord-dbd-shrine-of-secrets/issues';
 
 function create() {
     const Client = new Discord.Client();
@@ -40,16 +41,16 @@ function processHTML(html) {
     }
 }
 
-function calculateRefreshTime() {
+function calculateRefreshTime(guildUID) {
     const weekDay = new Date().getUTCDay();
 
     // Tuesday
     if (weekDay == 2) {
-        refresh_timer = (24 - new Date().getUTCHours()) + " hours";
+        refresh_timer = (24 - new Date().getUTCHours()) + Translate.T(" hours", guildUID);
     } else if (weekDay > 2) {
-        refresh_timer = (10 - weekDay) + " days";
+        refresh_timer = (10 - weekDay) + Translate.T(" days", guildUID);
     } else {
-        refresh_timer = (2 - weekDay) + " days";
+        refresh_timer = (2 - weekDay) + Translate.T(" days", guildUID);
     }
 }
 
@@ -62,46 +63,60 @@ function refresh() {
     RequestPromise(DBD_WIKI_SOS_PAGE)
         .then(processHTML)
         .catch(errorHandler);
-    calculateRefreshTime();
 }
 
 function onMessage(message, Client) {
+    if (message.channel instanceof Discord.DMChannel) {
+        mb.channel.send("I don't DM");
+        return;
+    }
+
     const command = message.content.split(Client.user.toString()).slice(1).join().trim();
 
     if (!command) return;
+
+    const guildUID = message.guild.id;
     
-    if (refresh_timer === undefined || perk_list.length === 0) {
-        message.channel.send("Not available right now, try again in a minute or so");
+    if (perk_list.length === 0) {
+        message.channel.send(Translate.T("Not available right now, try again in a minute or so", guildUID));
         return;
     }
 
     let mb = new Discord.RichEmbed();
 
     if (command === "help") {
-        mb.setTitle("Shrine of Secrets Bot Help");
+        mb.setTitle(Translate.T("Shrine of Secrets Bot Help", guildUID));
         mb.setThumbnail(Client.user.avatarURL);
-        mb.setDescription("Command list and descriptions. If you have any issues, report [here](https://github.com/lututui/discord-dbd-shrine-of-secrets/issues)");
+        mb.setDescription(Translate.T("Command list and descriptions. If you have any issues, report [here]", guildUID) + '(' + REPORT_ISSUE_LINK + ')');
         mb.addBlankField();
 
-        mb.addField("help", "Shows help");
-        mb.addField("shrine", "Displays shrine of secrets content and refresh timer");
-        mb.addField("refresh", "Displays shrine of secrets refresh timer");
+        mb.addField("help", Translate.T("Shows help", guildUID));
+        mb.addField("shrine", Translate.T("Displays shrine of secrets content and refresh timer", guildUID));
+        mb.addField("refresh", Translate.T("Displays shrine of secrets refresh timer", guildUID));
 
         message.channel.send(mb);
         return;
     }
 
+    if (command.includes("locale") && command !== "locale") {
+        const localeString = command.split(" ")[1];
+        Translate.setLocale(localeString, guildUID);
+        return;
+    }
+
+    calculateRefreshTime(guildUID);
+
     if (command === "shrine") {
-        mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
+        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in ", guildUID) + refresh_timer, false);
         message.channel.send(mb);
 
         perk_list.forEach(perk => {
             mb = new Discord.RichEmbed();
 
             mb.setImage(perk.getTeachableImage(), true);
-            mb.addField("Perk", attachWikiLink(perk.getName()), true);
-            mb.addField("Cost", perk.getCost(), true);
-            mb.addField("Unique Of", attachWikiLink(perk.getOwner()), true);
+            mb.addField(Translate.T("Perk", guildUID), attachWikiLink(perk.getName()), true);
+            mb.addField(Translate.T("Cost", guildUID), perk.getCost(), true);
+            mb.addField(Translate.T("Unique Of", guildUID), attachWikiLink(perk.getOwner()), true);
             
             message.channel.send(mb);
         });
@@ -109,7 +124,7 @@ function onMessage(message, Client) {
     }
 
     if (command === "refresh") {
-        mb.addField("Shrine of Secrets", REFRESH_PREFIX + refresh_timer, false);
+        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in ", guildUID) + refresh_timer, false);
         message.channel.send(mb);
         return;
     }
