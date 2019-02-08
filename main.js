@@ -19,7 +19,6 @@ function create() {
 }
 
 let perk_list = [];
-let refresh_timer;
 
 function processHTML(html) {
     const tag_tr = Cheerio('tr', html);
@@ -41,16 +40,16 @@ function processHTML(html) {
     }
 }
 
-function calculateRefreshTime(guildUID) {
+function calculateRefreshTime() {
     const weekDay = new Date().getUTCDay();
 
     // Tuesday
     if (weekDay == 2) {
-        refresh_timer = (24 - new Date().getUTCHours()) + ' ' + T("hours", guildUID);
+        return [ 24 - new Date().getUTCHours(),  "hours" ];
     } else if (weekDay > 2) {
-        refresh_timer = (10 - weekDay) + ' ' + T("days", guildUID);
+        return [ 10 - weekDay, "days" ];
     } else {
-        refresh_timer = (2 - weekDay) + ' ' + T("days", guildUID);
+        return [ 2 - weekDay, "days" ];
     }
 }
 
@@ -106,10 +105,10 @@ function onMessage(message, Client) {
         return;
     }
 
-    calculateRefreshTime(guildUID);
+    const [ timeout, timeoutString ] = calculateRefreshTime();
 
     if (command === "shrine") {
-        mb.addField(T("Shrine of Secrets", guildUID), T("The Shrine of Secrets refreshes in", guildUID) + ' ' + refresh_timer, false);
+        mb.addField(T("Shrine of Secrets", guildUID), [T("The Shrine of Secrets refreshes in", guildUID), timeout, T(timeoutString, guildUID)].join(' '), false);
         message.channel.send(mb);
 
         perk_list.forEach(perk => {
@@ -126,7 +125,7 @@ function onMessage(message, Client) {
     }
 
     if (command === "refresh") {
-        mb.addField(T("Shrine of Secrets", guildUID), T("The Shrine of Secrets refreshes in", guildUID) + ' ' + refresh_timer, false);
+        mb.addField(T("Shrine of Secrets", guildUID), [T("The Shrine of Secrets refreshes in", guildUID), timeout, T(timeoutString, guildUID)].join(' '), false);
         message.channel.send(mb);
         return;
     }
