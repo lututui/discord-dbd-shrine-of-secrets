@@ -4,9 +4,9 @@ const localeData = require('../locale/locale.json');
 function T(string, guildUID) {
     if (guildUID in localeConfig && 
          localeConfig[guildUID] !== "default" &&
-         localeConfig[guildUID] in localeData &&
-         string in localeData['default']) {
-        return localeData[localeConfig[guildUID]][localeData['default'][string]];
+         string in localeData &&
+         localeConfig[guildUID] in localeData[string]) {
+        return localeData[string][localeConfig[guildUID]];
     }
 
     return string;

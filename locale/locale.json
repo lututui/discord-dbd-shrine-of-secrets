@@ -1,32 +1,41 @@
 {
-    "default" : {
-        "The Shrine of Secrets refreshes in "                                   :   "0",
-        " hours"                                                                :   "1",
-        " days"                                                                 :   "2",
-        "Not available right now, try again in a minute or so"                  :   "3",
-        "Shrine of Secrets Bot Help"                                            :   "4",
-        "Command list and descriptions. If you have any issues, report [here]"  :   "5",
-        "Shows help"                                                            :   "6",
-        "Displays shrine of secrets content and refresh timer"                  :   "7",
-        "Displays shrine of secrets refresh timer"                              :   "8",
-        "Shrine of Secrets"                                                     :   "9",
-        "Perk"                                                                  :   "10",
-        "Cost"                                                                  :   "11",
-        "Unique Of"                                                             :   "12"
+    "The Shrine of Secrets refreshes in" : {
+        "pt-br" : "O Santuário dos Segredos atualizará em"
     },
-    "pt-br" : {
-        "0"     :   "O Santuário dos Segredos atualizará em ",
-        "1"     :   " horas",
-        "2"     :   " dias",
-        "3"     :   "Indisponível no momento, tente novamente mais tarde",
-        "4"     :   "Ajuda do Bot Shrine of Secrets",
-        "5"     :   "Lista e descrição de comandos. Se encontrar algum bug, reporte [aqui]",
-        "6"     :   "Mostra a ajuda",
-        "7"     :   "Mostra o conteúdo do Santuário e o tempo para atualizar",
-        "8"     :   "Mostra o tempo para atualizar o Santuário",
-        "9"     :   "Santuário dos Segredos",
-        "10"    :   "Vantagens",
-        "11"    :   "Preço",
-        "12"    :   "Único de"
+    "hours" : {
+        "pt-br" : "horas"
+    },
+    "days" : {
+        "pt-br" : "dias"
+    },
+    "Not available right now, try again in a minute or so" : {
+        "pt-br" : "Indisponível no momento, tente novamente mais tarde"
+    },
+    "Shrine of Secrets Bot Help" : {
+        "pt-br" : "Ajuda do Bot Shrine of Secrets"
+    },
+    "Command list and descriptions. If you have any issues, report [here]" : {
+        "pt-br" : "Lista e descrição de comandos. Se encontrar algum bug, reporte [aqui]"
+    },
+    "Shows help" : {
+        "pt-br" : "Mostra a ajuda"
+    },
+    "Displays shrine of secrets content and refresh timer" : {
+        "pt-br" : "Mostra o conteúdo do Santuário e o tempo para atualizar"
+    },
+    "Displays shrine of secrets refresh timer" : {
+        "pt-br" : "Mostra o tempo para atualizar o Santuário"
+    },
+    "Shrine of Secrets" : {
+        "pt-br" : "Santuário dos Segredos"
+    },
+    "Perk" : {
+        "pt-br" : "Vantagens"
+    },
+    "Cost" : {
+        "pt-br" : "Preço"
+    },
+    "Unique Of" : {
+        "pt-br" : "Único de"
     }
 }

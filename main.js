@@ -46,11 +46,11 @@ function calculateRefreshTime(guildUID) {
 
     // Tuesday
     if (weekDay == 2) {
-        refresh_timer = (24 - new Date().getUTCHours()) + Translate.T(" hours", guildUID);
+        refresh_timer = (24 - new Date().getUTCHours()) + ' ' + Translate.T("hours", guildUID);
     } else if (weekDay > 2) {
-        refresh_timer = (10 - weekDay) + Translate.T(" days", guildUID);
+        refresh_timer = (10 - weekDay) + ' ' + Translate.T("days", guildUID);
     } else {
-        refresh_timer = (2 - weekDay) + Translate.T(" days", guildUID);
+        refresh_timer = (2 - weekDay) + ' ' + Translate.T("days", guildUID);
     }
 }
 
@@ -66,8 +66,10 @@ function refresh() {
 }
 
 function onMessage(message, Client) {
+    if (message.author == Client.user) return;
+    
     if (message.channel instanceof Discord.DMChannel) {
-        mb.channel.send("I don't DM");
+        message.channel.send("I don't DM");
         return;
     }
 
@@ -107,7 +109,7 @@ function onMessage(message, Client) {
     calculateRefreshTime(guildUID);
 
     if (command === "shrine") {
-        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in ", guildUID) + refresh_timer, false);
+        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in", guildUID) + refresh_timer, false);
         message.channel.send(mb);
 
         perk_list.forEach(perk => {
