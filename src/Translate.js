@@ -3,7 +3,6 @@ const localeData = require('../locale/locale.json');
 
 function T(string, guildUID) {
     if (guildUID in localeConfig && 
-         localeConfig[guildUID] !== "default" &&
          string in localeData &&
          localeConfig[guildUID] in localeData[string]) {
         return localeData[string][localeConfig[guildUID]];

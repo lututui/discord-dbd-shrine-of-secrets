@@ -2,12 +2,10 @@ const Discord = require('discord.js');
 const RequestPromise = require('request-promise');
 const Cheerio = require('cheerio');
 
-const { T, setLocale } = require('./src/Translate.js');
+const { T } = require('./src/Translate.js');
 const Perk = require('./src/Perk.js');
-
-const DBD_WIKI_PREFIX = 'https://deadbydaylight.gamepedia.com/';
-const DBD_WIKI_SOS_PAGE = DBD_WIKI_PREFIX + 'Shrine_of_Secrets';
-const REPORT_ISSUE_LINK = 'https://github.com/lututui/discord-dbd-shrine-of-secrets/issues';
+const Commands = require('./src/Commands.js');
+const Misc = require('./src/Misc.js');
 
 function create() {
     const Client = new Discord.Client();
@@ -18,7 +16,7 @@ function create() {
     Client.on('message', (message) => onMessage(message, Client));
 }
 
-let perk_list = [];
+const perk_list = [];
 
 function processHTML(html) {
     const tag_tr = Cheerio('tr', html);
@@ -40,26 +38,13 @@ function processHTML(html) {
     }
 }
 
-function calculateRefreshTime() {
-    const weekDay = new Date().getUTCDay();
-
-    // Tuesday
-    if (weekDay == 2) {
-        return [ 24 - new Date().getUTCHours(),  "hours" ];
-    } else if (weekDay > 2) {
-        return [ 10 - weekDay, "days" ];
-    } else {
-        return [ 2 - weekDay, "days" ];
-    }
-}
-
 function errorHandler(error) {
     console.log(error);
     process.exit(1);
 }
 
 function refresh() {
-    RequestPromise(DBD_WIKI_SOS_PAGE)
+    RequestPromise(Misc.DBD_WIKI_SOS_PAGE)
         .then(processHTML)
         .catch(errorHandler);
 }
@@ -78,60 +63,27 @@ function onMessage(message, Client) {
         return;
     }
 
-    let mb = new Discord.RichEmbed();
-
-    if (command[1] === "help") {
-        mb.setTitle(T("Shrine of Secrets Bot Help", id));
-        mb.setThumbnail(Client.user.avatarURL);
-        mb.setDescription(T("Command list and descriptions. If you have any issues, report [here]", id) + '(' + REPORT_ISSUE_LINK + ')');
-        mb.addBlankField();
-
-        mb.addField("help", T("Shows help", id));
-        mb.addField("shrine", T("Displays shrine of secrets content and refresh timer", id));
-        mb.addField("refresh", T("Displays shrine of secrets refresh timer", id));
-
-        channel.send(mb);
-        return;
-    }
-
-    if (command[1] == "locale") {
-        setLocale(command[2], id);
-        return;
-    }
-
-    const [ timeout, timeoutString ] = calculateRefreshTime();
-
-    if (command[1] === "shrine") {
-        mb.addField(T("Shrine of Secrets", id), [T("The Shrine of Secrets refreshes in", id), timeout, T(timeoutString, id)].join(' '), false);
-        channel.send(mb);
-
-        perk_list.forEach(perk => {
-            mb = new Discord.RichEmbed();
-
-            mb.setImage(perk.getTeachableImage(), true);
-            mb.addField(T("Perk", id), attachWikiLink(perk.getName()), true);
-            mb.addField(T("Cost", id), perk.getCost(), true);
-            mb.addField(T("Unique Of", id), attachWikiLink(perk.getOwner()), true);
-            
-            channel.send(mb);
-        });
-        return;
-    }
-
-    if (command[1] === "refresh") {
-        mb.addField(T("Shrine of Secrets", id), [T("The Shrine of Secrets refreshes in", id), timeout, T(timeoutString, id)].join(' '), false);
-        channel.send(mb);
-        return;
+    switch (command[1]) {
+        case 'shrine':
+            Commands.cmdRefresh(channel, id);
+            Commands.cmdShrine(channel, id, perk_list);
+            break;
+        case 'refresh':
+            Commands.cmdRefresh(channel, id);
+            break;
+        case 'locale':
+            Commands.cmdLocale(command[2], id);
+            break;
+        case 'help':
+        default:
+            Commands.cmdHelp(Client, channel, id);
+            break;
     }
 }
 
 function onReady(Client) {
     Client.user.setActivity('Dead by Daylight', { type : 'PLAYING' });
     refresh();
-}
-
-function attachWikiLink(pageName) {
-    return '[' + pageName + ']' + '(' + DBD_WIKI_PREFIX + pageName.split(' ').join('_') + ')';
 }
 
 setInterval(refresh, 180000);
