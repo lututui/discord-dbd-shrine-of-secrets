@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const RequestPromise = require('request-promise');
 const Cheerio = require('cheerio');
 
-const Translate = require('./src/Translate.js');
+const { T, setLocale } = require('./src/Translate.js');
 const Perk = require('./src/Perk.js');
 
 const DBD_WIKI_PREFIX = 'https://deadbydaylight.gamepedia.com/';
@@ -46,11 +46,11 @@ function calculateRefreshTime(guildUID) {
 
     // Tuesday
     if (weekDay == 2) {
-        refresh_timer = (24 - new Date().getUTCHours()) + ' ' + Translate.T("hours", guildUID);
+        refresh_timer = (24 - new Date().getUTCHours()) + ' ' + T("hours", guildUID);
     } else if (weekDay > 2) {
-        refresh_timer = (10 - weekDay) + ' ' + Translate.T("days", guildUID);
+        refresh_timer = (10 - weekDay) + ' ' + T("days", guildUID);
     } else {
-        refresh_timer = (2 - weekDay) + ' ' + Translate.T("days", guildUID);
+        refresh_timer = (2 - weekDay) + ' ' + T("days", guildUID);
     }
 }
 
@@ -80,21 +80,21 @@ function onMessage(message, Client) {
     const guildUID = message.guild.id;
     
     if (perk_list.length === 0) {
-        message.channel.send(Translate.T("Not available right now, try again in a minute or so", guildUID));
+        message.channel.send(T("Not available right now, try again in a minute or so", guildUID));
         return;
     }
 
     let mb = new Discord.RichEmbed();
 
     if (command === "help") {
-        mb.setTitle(Translate.T("Shrine of Secrets Bot Help", guildUID));
+        mb.setTitle(T("Shrine of Secrets Bot Help", guildUID));
         mb.setThumbnail(Client.user.avatarURL);
-        mb.setDescription(Translate.T("Command list and descriptions. If you have any issues, report [here]", guildUID) + '(' + REPORT_ISSUE_LINK + ')');
+        mb.setDescription(T("Command list and descriptions. If you have any issues, report [here]", guildUID) + '(' + REPORT_ISSUE_LINK + ')');
         mb.addBlankField();
 
-        mb.addField("help", Translate.T("Shows help", guildUID));
-        mb.addField("shrine", Translate.T("Displays shrine of secrets content and refresh timer", guildUID));
-        mb.addField("refresh", Translate.T("Displays shrine of secrets refresh timer", guildUID));
+        mb.addField("help", T("Shows help", guildUID));
+        mb.addField("shrine", T("Displays shrine of secrets content and refresh timer", guildUID));
+        mb.addField("refresh", T("Displays shrine of secrets refresh timer", guildUID));
 
         message.channel.send(mb);
         return;
@@ -102,23 +102,23 @@ function onMessage(message, Client) {
 
     if (command.includes("locale") && command !== "locale") {
         const localeString = command.split(" ")[1];
-        Translate.setLocale(localeString, guildUID);
+        setLocale(localeString, guildUID);
         return;
     }
 
     calculateRefreshTime(guildUID);
 
     if (command === "shrine") {
-        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in", guildUID) + refresh_timer, false);
+        mb.addField(T("Shrine of Secrets", guildUID), T("The Shrine of Secrets refreshes in", guildUID) + ' ' + refresh_timer, false);
         message.channel.send(mb);
 
         perk_list.forEach(perk => {
             mb = new Discord.RichEmbed();
 
             mb.setImage(perk.getTeachableImage(), true);
-            mb.addField(Translate.T("Perk", guildUID), attachWikiLink(perk.getName()), true);
-            mb.addField(Translate.T("Cost", guildUID), perk.getCost(), true);
-            mb.addField(Translate.T("Unique Of", guildUID), attachWikiLink(perk.getOwner()), true);
+            mb.addField(T("Perk", guildUID), attachWikiLink(perk.getName()), true);
+            mb.addField(T("Cost", guildUID), perk.getCost(), true);
+            mb.addField(T("Unique Of", guildUID), attachWikiLink(perk.getOwner()), true);
             
             message.channel.send(mb);
         });
@@ -126,7 +126,7 @@ function onMessage(message, Client) {
     }
 
     if (command === "refresh") {
-        mb.addField(Translate.T("Shrine of Secrets", guildUID), Translate.T("The Shrine of Secrets refreshes in ", guildUID) + refresh_timer, false);
+        mb.addField(T("Shrine of Secrets", guildUID), T("The Shrine of Secrets refreshes in", guildUID) + ' ' + refresh_timer, false);
         message.channel.send(mb);
         return;
     }
