@@ -65,68 +65,62 @@ function refresh() {
 }
 
 function onMessage(message, Client) {
-    if (message.author == Client.user) return;
-    
-    if (message.channel instanceof Discord.DMChannel) {
-        message.channel.send("I don't DM");
-        return;
-    }
+    const { author, channel, content, guild } = message;
 
-    const command = message.content.split(Client.user.toString()).slice(1).join().trim();
+    if (author == Client.user) return;
+    if (!content.startsWith(Client.user.toString())) return;
 
-    if (!command) return;
-
-    const guildUID = message.guild.id;
+    const command = content.trim().split(' ');
+    const id = (channel.type === 'dm' || channel.tag_tr === 'group') ? channel.id : guild.id;
     
     if (perk_list.length === 0) {
-        message.channel.send(T("Not available right now, try again in a minute or so", guildUID));
+        channel.send(T("Not available right now, try again in a minute or so", id));
         return;
     }
 
     let mb = new Discord.RichEmbed();
 
-    if (command === "help") {
-        mb.setTitle(T("Shrine of Secrets Bot Help", guildUID));
+    if (command[1] === "help") {
+        mb.setTitle(T("Shrine of Secrets Bot Help", id));
         mb.setThumbnail(Client.user.avatarURL);
-        mb.setDescription(T("Command list and descriptions. If you have any issues, report [here]", guildUID) + '(' + REPORT_ISSUE_LINK + ')');
+        mb.setDescription(T("Command list and descriptions. If you have any issues, report [here]", id) + '(' + REPORT_ISSUE_LINK + ')');
         mb.addBlankField();
 
-        mb.addField("help", T("Shows help", guildUID));
-        mb.addField("shrine", T("Displays shrine of secrets content and refresh timer", guildUID));
-        mb.addField("refresh", T("Displays shrine of secrets refresh timer", guildUID));
+        mb.addField("help", T("Shows help", id));
+        mb.addField("shrine", T("Displays shrine of secrets content and refresh timer", id));
+        mb.addField("refresh", T("Displays shrine of secrets refresh timer", id));
 
-        message.channel.send(mb);
+        channel.send(mb);
         return;
     }
 
-    if (command.includes("locale") && command !== "locale") {
-        const localeString = command.split(" ")[1];
-        setLocale(localeString, guildUID);
+    if (command[1] == "locale") {
+        setLocale(command[2], id);
         return;
     }
 
     const [ timeout, timeoutString ] = calculateRefreshTime();
 
-    if (command === "shrine") {
-        mb.addField(T("Shrine of Secrets", guildUID), [T("The Shrine of Secrets refreshes in", guildUID), timeout, T(timeoutString, guildUID)].join(' '), false);
-        message.channel.send(mb);
+    if (command[1] === "shrine") {
+        mb.addField(T("Shrine of Secrets", id), [T("The Shrine of Secrets refreshes in", id), timeout, T(timeoutString, id)].join(' '), false);
+        channel.send(mb);
 
         perk_list.forEach(perk => {
             mb = new Discord.RichEmbed();
 
             mb.setImage(perk.getTeachableImage(), true);
-            mb.addField(T("Perk", guildUID), attachWikiLink(perk.getName()), true);
-            mb.addField(T("Cost", guildUID), perk.getCost(), true);
-            mb.addField(T("Unique Of", guildUID), attachWikiLink(perk.getOwner()), true);
+            mb.addField(T("Perk", id), attachWikiLink(perk.getName()), true);
+            mb.addField(T("Cost", id), perk.getCost(), true);
+            mb.addField(T("Unique Of", id), attachWikiLink(perk.getOwner()), true);
             
-            message.channel.send(mb);
+            channel.send(mb);
         });
         return;
     }
 
-    if (command === "refresh") {
-        mb.addField(T("Shrine of Secrets", guildUID), [T("The Shrine of Secrets refreshes in", guildUID), timeout, T(timeoutString, guildUID)].join(' '), false);
-        message.channel.send(mb);
+    if (command[1] === "refresh") {
+        mb.addField(T("Shrine of Secrets", id), [T("The Shrine of Secrets refreshes in", id), timeout, T(timeoutString, id)].join(' '), false);
+        channel.send(mb);
         return;
     }
 }
