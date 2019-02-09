@@ -72,7 +72,7 @@ function onMessage(message, Client) {
             Commands.cmdRefresh(channel, id);
             break;
         case 'locale':
-            Commands.cmdLocale(command[2], id);
+            Commands.cmdLocale(channel, id, command[2]);
             break;
         case 'help':
         default:

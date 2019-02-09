@@ -37,5 +37,29 @@
     },
     "Unique Of" : {
         "pt-br" : "Único de"
+    },
+    "Current locale" : {
+        "pt-br" : "Idioma atual"
+    },
+    "Locale set success" : {
+        "pt-br" : "Sucesso ao definir idioma"
+    },
+    "Set this server localization to" : {
+        "pt-br" : "Idioma deste servidor definido como"
+    },
+    "Locale set fail" : {
+        "pt-br" : "Falha ao definir idioma"
+    },
+    "Unknown locale" : {
+        "pt-br" : "Idioma desconhecido"
+    },
+    "Help Wanted!" : {
+        "pt-br" : "Ajude-nos!"
+    },
+    "Want to add support for a language? Click [here]" : {
+        "pt-br" : "Quer adicionar suporte para um idioma? Clique [aqui]"
+    },
+    "Supported locales" : {
+        "pt-br" : "Idiomas suportados"
     }
 }

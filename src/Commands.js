@@ -1,7 +1,9 @@
 const { RichEmbed } = require('discord.js');
 
-const { T, setLocale } = require('./Translate.js');
+const { T, setLocale, getLocale } = require('./Translate.js');
 const Misc = require('./Misc.js');
+
+const supportedLocale = require('../locale/supported.json');
 
 function cmdHelp(Client, channel, id) {
     const re = new RichEmbed();
@@ -18,8 +20,31 @@ function cmdHelp(Client, channel, id) {
     channel.send(re);
 }
 
-function cmdLocale(localeString, id) {
-    setLocale(localeString, id);
+function cmdLocale(channel, id, localeString) {
+    const re = new RichEmbed();
+    const isDefined = typeof localeString !== 'undefined' && localeString;
+    const isValid = isDefined && supportedLocale.includes(localeString);
+
+    if (isDefined && isValid) {
+        setLocale(localeString, id);
+
+        re.addField(T("Locale set success", id), T("Set this server localization to", id) + ' ' + localeString);
+
+        channel.send(re);
+
+        return;
+    }
+
+    if (!isDefined)
+        re.addField(T("Current locale", id), getLocale(id));
+
+    if (isDefined && !isValid)
+        re.addField(T("Locale set fail", id), T("Unknown locale", id) + ' ' + localeString);
+
+    re.addField(T("Supported locales", id), supportedLocale.join(', '));
+    re.addField(T("Help Wanted!", id), T("Want to add support for a language? Click [here]", id) + '(' + Misc.LOCALE_LINK + ')');
+
+    channel.send(re);
 }
 
 function cmdShrine(channel, id, perk_list) {
