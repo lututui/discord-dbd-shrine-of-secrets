@@ -10,7 +10,7 @@ function cmdHelp(Client, channel, id) {
 
     re.setTitle(T("Shrine of Secrets Bot Help", id));
     re.setThumbnail(Client.user.avatarURL);
-    re.setDescription(T("Command list and descriptions. If you have any issues, report [here]", id) + '(' + Misc.REPORT_ISSUE_LINK + ')');
+    re.setDescription(T("Command list and descriptions. If you have any issues, report", id) + ' ' + Misc.hyperlinkMarkdown(T("here", id), Misc.REPORT_ISSUE_LINK));
     re.addBlankField();
 
     re.addField("help", T("Shows help", id));
@@ -42,7 +42,7 @@ function cmdLocale(channel, id, localeString) {
         re.addField(T("Locale set fail", id), T("Unknown locale", id) + ' ' + localeString);
 
     re.addField(T("Supported locales", id), supportedLocale.join(', '));
-    re.addField(T("Help Wanted!", id), T("Want to add support for a language? Click [here]", id) + '(' + Misc.LOCALE_LINK + ')');
+    re.addField(T("Help Wanted!", id), T("Want to add support for a language? Click", id) + ' ' + Misc.hyperlinkMarkdown(T("here", id), Misc.LOCALE_LINK));
 
     channel.send(re);
 }
@@ -52,9 +52,9 @@ function cmdShrine(channel, id, perk_list) {
         const re = new RichEmbed();
 
         re.setImage(perk.getTeachableImage(), true);
-        re.addField(T("Perk", id), Misc.attachWikiLink(perk.getName()), true);
+        re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perk.getName(), Misc.getWikiURL(perk.getName())), true);
         re.addField(T("Cost", id), perk.getCost(), true);
-        re.addField(T("Unique Of", id), Misc.attachWikiLink(perk.getOwner()), true);
+        re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perk.getOwner(), Misc.getWikiURL(perk.getOwner())), true);
             
         channel.send(re);
     });

@@ -14,8 +14,8 @@
     "Shrine of Secrets Bot Help" : {
         "pt-br" : "Ajuda do Bot Shrine of Secrets"
     },
-    "Command list and descriptions. If you have any issues, report [here]" : {
-        "pt-br" : "Lista e descrição de comandos. Se encontrar algum bug, reporte [aqui]"
+    "Command list and descriptions. If you have any issues, report" : {
+        "pt-br" : "Lista e descrição de comandos. Se encontrar algum bug, reporte"
     },
     "Shows help" : {
         "pt-br" : "Mostra a ajuda"
@@ -56,10 +56,13 @@
     "Help Wanted!" : {
         "pt-br" : "Ajude-nos!"
     },
-    "Want to add support for a language? Click [here]" : {
-        "pt-br" : "Quer adicionar suporte para um idioma? Clique [aqui]"
+    "Want to add support for a language? Click" : {
+        "pt-br" : "Quer adicionar suporte para um idioma? Clique"
     },
     "Supported locales" : {
         "pt-br" : "Idiomas suportados"
+    },
+    "here" : {
+        "pt-br" : "aqui"
     }
 }
