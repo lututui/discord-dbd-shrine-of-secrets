@@ -1,6 +1,6 @@
 {
   "name": "discord-dbd-sos",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A Dead by Daylight Shrine of Secrets bot for discord",
   "main": "main.js",
   "scripts": {
@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/lututui/discord-dbd-shrine-of-secrets#readme",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.4.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"

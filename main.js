@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
-const RequestPromise = require('request-promise');
-const Cheerio = require('cheerio');
 
 const { T } = require('./src/Translate.js');
 const Perk = require('./src/Perk.js');
 const Commands = require('./src/Commands.js');
 const Misc = require('./src/Misc.js');
+const MediaWikiAPI = require('./src/MediaWikiAPI.js');
+
+const wikiapi = new MediaWikiAPI(Misc.DBD_WIKI_API);
 
 function create() {
     const Client = new Discord.Client();
@@ -16,26 +17,15 @@ function create() {
     Client.on('message', (message) => onMessage(message, Client));
 }
 
-const perk_list = [];
+let perk_list = [];
 
-function processHTML(html) {
-    const tag_tr = Cheerio('tr', html);
+async function processShrine(json) {
+    const wikitext = json['*'];
+    const template = wikitext.substr(0, wikitext.indexOf("<!--")).trim();
+    const boundries = [ template.indexOf("|") + 1, template.indexOf("}") ];
+    const perkIDs = template.substr(boundries[0], boundries[1] - boundries[0]).split("|");
 
-    const text_base = Cheerio('td', tag_tr);
-    const images = Cheerio('th > div > div > a > img', tag_tr);
-
-    const text1 = Cheerio('a', text_base);
-    const text2 = Cheerio('b > span', text_base);
-
-    for (let i = 0; i < 4; i++) {
-        perk_list[i] = new Perk(
-            name=Cheerio(text1[3 * i]).text(),
-            owner=Cheerio(text1[3 * i + 2]).text(),
-            cost=Cheerio(text2[i]).text(),
-            teachable_image=Cheerio(images[2 * i]).attr('src'),
-            owner_image=Cheerio(images[2 * i + 1]).attr('src')
-        );
-    }
+    perk_list = perkIDs.map(it => new Perk(it, wikiapi));
 }
 
 function errorHandler(error) {
@@ -44,9 +34,7 @@ function errorHandler(error) {
 }
 
 function refresh() {
-    RequestPromise(Misc.DBD_WIKI_SOS_PAGE)
-        .then(processHTML)
-        .catch(errorHandler);
+    wikiapi.parse('Template:Shrine_of_Secrets').then(processShrine).catch(errorHandler);
 }
 
 function onMessage(message, Client) {

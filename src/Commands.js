@@ -48,13 +48,14 @@ function cmdLocale(channel, id, localeString) {
 }
 
 function cmdShrine(channel, id, perk_list) {
-    perk_list.forEach(perk => {
+    perk_list.forEach(async (perk) => {
+        const perkInfo = await Promise.all([perk.getName(), perk.getOwner(), perk.getCost(), perk.getTeachableImage()]);
         const re = new RichEmbed();
 
-        re.setImage(perk.getTeachableImage(), true);
-        re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perk.getName(), Misc.getWikiURL(perk.getName())), true);
-        re.addField(T("Cost", id), perk.getCost(), true);
-        re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perk.getOwner(), Misc.getWikiURL(perk.getOwner())), true);
+        re.setThumbnail(perkInfo[3], true);
+        re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perkInfo[0], Misc.getWikiURL(perkInfo[0])));
+        re.addField(T("Cost", id), perkInfo[2]);
+        re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perkInfo[1], Misc.getWikiURL(perkInfo[1])));
             
         channel.send(re);
     });
