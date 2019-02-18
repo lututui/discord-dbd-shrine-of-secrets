@@ -20,15 +20,18 @@ function cmdHelp(Client, channel, id) {
     channel.send(re);
 }
 
-function cmdLocale(channel, id, localeString) {
+function cmdLocale(channel, id, localeString, isADM) {
     const re = new RichEmbed();
     const isDefined = typeof localeString !== 'undefined' && localeString;
     const isValid = isDefined && supportedLocale.includes(localeString);
 
     if (isDefined && isValid) {
-        setLocale(localeString, id);
-
-        re.addField(T("Locale set success", id), T("Set this server localization to", id) + ' ' + localeString);
+        if (isADM) {
+            setLocale(localeString, id);
+            re.addField(T("Locale set success", id), T("Set this server localization to", id) + ' ' + localeString);
+        } else {
+            re.addField(T("Locale set fail", id), T("You are not allowed to use this command", id));
+        }
 
         channel.send(re);
 

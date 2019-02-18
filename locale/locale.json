@@ -64,5 +64,8 @@
     },
     "here" : {
         "pt-br" : "aqui"
+    },
+    "You are not allowed to use this command" : {
+        "pt-br" : "Você não tem permissão para usar esse comando"
     }
 }

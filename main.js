@@ -44,7 +44,9 @@ function onMessage(message, Client) {
     if (!content.startsWith(Client.user.toString())) return;
 
     const command = content.trim().split(' ');
-    const id = (channel.type === 'dm' || channel.tag_tr === 'group') ? channel.id : guild.id;
+    const isDM = channel.type === 'dm' || channel.type === 'group';
+    const isADM = isDM || channel.type === 'text' && channel.memberPermissions(author).has(Discord.Permissions.FLAGS.MANAGE_CHANNELS);
+    const id = isDM ? channel.id : guild.id;
     
     if (perk_list.length === 0) {
         channel.send(T("Not available right now, try again in a minute or so", id));
@@ -60,7 +62,7 @@ function onMessage(message, Client) {
             Commands.cmdRefresh(channel, id);
             break;
         case 'locale':
-            Commands.cmdLocale(channel, id, command[2]);
+            Commands.cmdLocale(channel, id, command[2], isADM);
             break;
         case 'help':
         default:
