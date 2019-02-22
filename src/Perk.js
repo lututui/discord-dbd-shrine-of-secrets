@@ -30,7 +30,7 @@ class Perk {
     async getTeachableImage() {
         if (this.teachable_image === undefined) {
             const fileName = await this.wikiapi.expandtemplates('sos_perk_image', [this.perkID]);
-            this.teachable_image = await this.wikiapi.imageinfo('File:' + fileName.replace('.', '%2E'), 'url');
+            this.teachable_image = await this.wikiapi.imageinfo('File:' + fileName, 'url');
         }
 
         return this.teachable_image;
@@ -39,7 +39,7 @@ class Perk {
     async getOwnerImage() {
         if (this.owner_image === undefined) {
             const fileName = await this.wikiapi.expandtemplates('sos_char_image', [this.perkID]);
-			this.owner_image = await this.wikiapi.imageinfo('File:' + fileName.replace('.', '%2E'), 'url');
+			this.owner_image = await this.wikiapi.imageinfo('File:' + fileName, 'url');
 		}
 
         return this.owner_image;

@@ -8,9 +8,18 @@ class MediaWikiAPI {
     }
 
     async parse(page, prop = 'wikitext') {
-        const uri = this.targetAPI + 'format=json' + '&action=parse' + '&prop=' + prop + '&page=' + page;
+        const request = {
+            uri: this.targetAPI,
+            qs: {
+                format: 'json',
+                action: 'parse',
+                prop: prop,
+                page: page
+            },
+            json: true
+        };
 
-        return RequestPromise(uri).then(it => { return JSON.parse(it).parse[prop] });
+        return RequestPromise(request).then(it => { return it.parse[prop] });
     }
 
     async expandtemplates(template, args, prop = 'wikitext') {
@@ -19,15 +28,35 @@ class MediaWikiAPI {
         if (args != null)
             joinedArgs = '|' + args.join('|');
 
-        const uri = this.targetAPI + 'format=json' + '&action=expandtemplates' + '&prop=' + prop + '&text={{' + template + joinedArgs + '}}';
+        const request = {
+            uri: this.targetAPI,
+            qs: {
+                format: 'json',
+                action: 'expandtemplates',
+                prop: prop,
+                text: '{{' + template + joinedArgs + '}}'
+            },
+            json: true
+        };
 
-        return RequestPromise(uri).then(it => { return JSON.parse(it).expandtemplates[prop] });
+        return RequestPromise(request).then(it => { return it.expandtemplates[prop] });
     }
 
     async imageinfo(titles, iiprop) {
-        const uri = this.targetAPI + 'format=json' + '&action=query' + '&prop=imageinfo' + '&titles=' + titles + '&iiprop=' + iiprop + '&formatversion=2';
+        const request = {
+            uri: this.targetAPI,
+            qs: {
+                format: 'json',
+                action: 'query',
+                prop: 'imageinfo',
+                titles: titles,
+                iiprop: iiprop,
+                formatversion: '2'
+            },
+            json: true
+        };
 
-        return RequestPromise(uri).then(it => { return JSON.parse(it).query.pages[0].imageinfo[0][iiprop] });
+        return RequestPromise(request).then(it => { return it.query.pages[0].imageinfo[0][iiprop] });
     }
 }
 
