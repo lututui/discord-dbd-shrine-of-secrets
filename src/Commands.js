@@ -51,16 +51,28 @@ function cmdLocale(channel, id, localeString, isADM) {
 }
 
 function cmdShrine(channel, id, perk_list) {
-    perk_list.forEach(async (perk) => {
-        const perkInfo = await Promise.all([perk.getName(), perk.getOwner(), perk.getCost(), perk.getTeachableImage()]);
-        const re = new RichEmbed();
+    async function perkInfoBuild(perk) {
+        return await Promise.all([perk.getName(), perk.getOwner(), perk.getCost(), perk.getTeachableImage()]);
+    }
 
-        re.setThumbnail(perkInfo[3], true);
-        re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perkInfo[0], Misc.getWikiURL(perkInfo[0])));
-        re.addField(T("Cost", id), perkInfo[2]);
-        re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perkInfo[1], Misc.getWikiURL(perkInfo[1])));
-            
-        channel.send(re);
+    async function perkInfoListBuild(perk_list) {
+        return await Promise.all([
+            perkInfoBuild(perk_list[0]), perkInfoBuild(perk_list[1]), 
+            perkInfoBuild(perk_list[2]), perkInfoBuild(perk_list[3])
+        ]);
+    }
+
+    perkInfoListBuild(perk_list).then(perkInfoList => {
+        perkInfoList.forEach(perkInfo => {
+            const re = new RichEmbed();
+
+            re.setThumbnail(perkInfo[3], true);
+            re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perkInfo[0], Misc.getWikiURL(perkInfo[0])));
+            re.addField(T("Cost", id), perkInfo[2]);
+            re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perkInfo[1], Misc.getWikiURL(perkInfo[1])));
+
+            channel.send(re)
+        });
     });
 }
 
