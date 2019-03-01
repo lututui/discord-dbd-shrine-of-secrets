@@ -67,5 +67,8 @@
     },
     "You are not allowed to use this command" : {
         "pt-br" : "Você não tem permissão para usar esse comando"
+    },
+    "Gets or sets locale for a specific server" : {
+        "pt-br" : "Recupera ou define o idioma de determinado servidor"
     }
 }

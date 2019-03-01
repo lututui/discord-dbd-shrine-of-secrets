@@ -16,6 +16,7 @@ function cmdHelp(Client, channel, id) {
     re.addField("help", T("Shows help", id));
     re.addField("shrine", T("Displays shrine of secrets content and refresh timer", id));
     re.addField("refresh", T("Displays shrine of secrets refresh timer", id));
+    re.addField("locale", T("Gets or sets locale for a specific server", id));
 
     channel.send(re);
 }
