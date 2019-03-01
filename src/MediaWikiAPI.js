@@ -1,50 +1,47 @@
 const RequestPromise = require('request-promise');
 
-class MediaWikiAPI {
-    constructor(targetAPI) {
-        this.targetAPI = targetAPI;
+const _submit = Symbol('submit');
 
-        if (!this.targetAPI.endsWith('?')) this.targetAPI += '?'
+class MediaWikiAPI {
+    constructor(api) {
+        this.api = api;
+    }
+
+    [_submit](options) {
+        options.json = true;
+        options.uri = this.api;
+
+        return RequestPromise(options);
     }
 
     async parse(page, prop = 'wikitext') {
-        const request = {
-            uri: this.targetAPI,
+        const options = {
             qs: {
                 format: 'json',
                 action: 'parse',
                 prop: prop,
                 page: page
             },
-            json: true
         };
 
-        return RequestPromise(request).then(it => { return it.parse[prop] });
+        return this[_submit](options).then(it => { return it.parse[prop] });
     }
 
     async expandtemplates(template, args, prop = 'wikitext') {
-        let joinedArgs = "";
-
-        if (args != null)
-            joinedArgs = '|' + args.join('|');
-
-        const request = {
-            uri: this.targetAPI,
+        const options = {
             qs: {
                 format: 'json',
                 action: 'expandtemplates',
                 prop: prop,
-                text: '{{' + template + joinedArgs + '}}'
+                text: '{{' + template + ((args != null) ? '|' + args.join('|') : "") + '}}'
             },
-            json: true
         };
 
-        return RequestPromise(request).then(it => { return it.expandtemplates[prop] });
+        return this[_submit](options).then(it => { return it.expandtemplates[prop] });
     }
 
     async imageinfo(titles, iiprop) {
-        const request = {
-            uri: this.targetAPI,
+        const options = {
             qs: {
                 format: 'json',
                 action: 'query',
@@ -53,10 +50,9 @@ class MediaWikiAPI {
                 iiprop: iiprop,
                 formatversion: '2'
             },
-            json: true
         };
 
-        return RequestPromise(request).then(it => { return it.query.pages[0].imageinfo[0][iiprop] });
+        return this[_submit](options).then(it => { return it.query.pages[0].imageinfo[0][iiprop] });
     }
 }
 
