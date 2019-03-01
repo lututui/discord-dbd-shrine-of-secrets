@@ -25,7 +25,12 @@ async function processShrine(json) {
     const boundries = [ template.indexOf("|") + 1, template.indexOf("}") ];
     const perkIDs = template.substr(boundries[0], boundries[1] - boundries[0]).split("|");
 
-    perk_list = perkIDs.map(it => new Perk(it, wikiapi));
+    if (perk_list.filter(it => perkIDs.indexOf(it.getID()) !== -1 ).length === 0) {
+        console.log("New perk(s) found in shrine, updating...");
+        perk_list = perkIDs.map(it => new Perk(it, wikiapi));
+    } else {
+        console.log("Nothing new in shrine");
+    }
 }
 
 function errorHandler(error) {

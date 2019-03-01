@@ -6,6 +6,10 @@ class Perk {
         this.wikiapi = wikiapi;
     }
 
+    getID() {
+        return this.perkID;
+    }
+
     async getName() {
         if (this.name === undefined)
             this.name = await this.wikiapi.expandtemplates('sos_perk_name', [this.perkID]);
