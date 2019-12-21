@@ -46,7 +46,7 @@ function onMessage(message, Client) {
     const { author, channel, content, guild } = message;
 
     if (author == Client.user) return;
-    if (!content.startsWith(Client.user.toString())) return;
+    if (!message.isMentioned(Client.user)) return;
 
     const command = content.trim().split(' ');
     const isDM = channel.type === 'dm' || channel.type === 'group';
