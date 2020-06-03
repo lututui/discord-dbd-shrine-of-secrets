@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const Lua = require('lua-in-js');
 
 const { T } = require('./src/Translate.js');
 const Perk = require('./src/Perk.js');
@@ -7,6 +8,7 @@ const Misc = require('./src/Misc.js');
 const MediaWikiAPI = require('./src/MediaWikiAPI.js');
 
 const wikiapi = new MediaWikiAPI(Misc.DBD_WIKI_API);
+const luaenv = Lua.createEnv();
 
 function create() {
     const Client = new Discord.Client();
@@ -20,10 +22,10 @@ function create() {
 let perk_list = [];
 
 async function processShrine(json) {
-    const wikitext = json['*'];
-    const template = wikitext.substr(0, wikitext.indexOf("<!--")).trim();
-    const boundries = [ template.indexOf("|") + 1, template.indexOf("}") ];
-    const perkIDs = template.substr(boundries[0], boundries[1] - boundries[0]).split("|");
+	const wikitext = json['*'];	
+	const perkIDs = luaenv.parse(wikitext + '\n' + 'return sos[1]').exec().numValues.filter(Number);
+	
+	console.log(perkIDs);
 
     if (perk_list.filter(it => perkIDs.indexOf(it.getID()) !== -1 ).length === 0) {
         console.log("New perk(s) found in shrine, updating...");
@@ -39,7 +41,7 @@ function errorHandler(error) {
 }
 
 function refresh() {
-    wikiapi.parse('Template:Shrine_of_Secrets').then(processShrine).catch(errorHandler);
+    wikiapi.parse('Module:Datatable/SoS').then(processShrine).catch(errorHandler);
 }
 
 function onMessage(message, Client) {
