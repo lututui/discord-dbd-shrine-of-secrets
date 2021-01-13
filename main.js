@@ -71,14 +71,14 @@ function refresh() {
 }
 
 function onMessage(message, Client) {
-    const { author, channel, content, guild } = message;
+    const { author, member, channel, content, guild } = message;
 
     if (author == Client.user) return;
     if (!message.isMentioned(Client.user)) return;
 
     const command = content.trim().split(' ');
     const isDM = channel.type === 'dm' || channel.type === 'group';
-    const isADM = isDM || channel.type === 'text' && channel.memberPermissions(author).has(Discord.Permissions.FLAGS.MANAGE_CHANNELS);
+    const isADM = isDM || channel.type === 'text' && !member.manageable;
     const id = isDM ? channel.id : guild.id;
     
     if (perk_list.length === 0) {

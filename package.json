@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/lututui/discord-dbd-shrine-of-secrets#readme",
   "dependencies": {
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.6.4",
     "lua-in-js": "^2.2.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   }
 }
