@@ -20,16 +20,42 @@ function create() {
 }
 
 let perk_list = [];
+let perkTable = {};
+let iconTable = {};
+let characterTable = {};
 
 async function processShrine(json) {
-	const wikitext = json['*'];	
-	const perkIDs = luaenv.parse(wikitext + '\n' + 'return sos[1]').exec().numValues.filter(Number);
+	const wikitext = json['*']; 
+    const shrineHistory = luaenv.parse(json['*'] + "\n" + "return sos").exec().numValues.slice(1).map(it => it.numValues.slice(1));
+	const currentShrine = shrineHistory[0];
 	
-	console.log(perkIDs);
+	console.log(currentShrine);
 
-    if (perk_list.filter(it => perkIDs.indexOf(it.getID()) !== -1 ).length === 0) {
+    if (perk_list.filter(it => currentShrine.indexOf(it.getID()) !== -1 ).length === 0) {
         console.log("New perk(s) found in shrine, updating...");
-        perk_list = perkIDs.map(it => new Perk(it, wikiapi));
+        
+        const [ perkDatatable, iconDatatable, miscDatatable ] = await Promise.all([
+            wikiapi.parse('Module:Datatable/Perks'),
+            wikiapi.parse('Module:Datatable/Icons'),
+            wikiapi.parse('Module:Datatable')
+        ]);
+        
+        perkTable = luaenv.parse(Misc.PERK_DATATABLE_DUMMY_CODE + "\n" + Misc.LUA_ARRAY_TO_TABLE + "\n" + perkDatatable['*'] + "\n" + 'return arrayToTable("id", perks)').exec().numValues.slice(1).map(it => it.strValues);
+        iconTable = Misc.objectMap(luaenv.parse(iconDatatable['*'] + "\n" + Misc.LUA_ARRAY_TO_TABLE + "\n" + 'return arrayToTable("icon", icons)').exec().strValues, (k, v) => v.strValues);
+        characterTable['K'] = luaenv.parse(miscDatatable['*'] + "\n" + Misc.LUA_ARRAY_TO_TABLE + "\n" + 'return arrayToTable("id", killers)').exec().numValues.slice(1).map(it => it.strValues);
+        characterTable['S'] = luaenv.parse(miscDatatable['*'] + "\n" + Misc.LUA_ARRAY_TO_TABLE + "\n" + 'return arrayToTable("id", survivors)').exec().numValues.slice(1).map(it => it.strValues);        
+        
+        perk_list = currentShrine.map(perkID => 
+            new Perk(
+                perkID - 1, 
+                perkTable[perkID - 1]["name"], 
+                characterTable[perkTable[perkID - 1]["charType"]][perkTable[perkID - 1]["character"] - 1]["name"], 
+                shrineHistory.some(shr => shr.includes(perkID)) ? 2000 : 2700,
+                iconTable[perkTable[perkID - 1]["name"]]["iconFile"],
+                characterTable[perkTable[perkID - 1]["charType"]][perkTable[perkID - 1]["character"] - 1]["name"] + Misc.PERK_OWNER_PORTRAIT_FILE_SUFFIX,
+                wikiapi
+            )
+        );
     } else {
         console.log("Nothing new in shrine");
     }

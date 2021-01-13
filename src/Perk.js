@@ -1,8 +1,13 @@
 const MediaWikiAPI = require('./MediaWikiAPI.js');
 
 class Perk {
-    constructor(perkID, wikiapi) {
+    constructor(perkID, perkName, perkOwner, perkCost, perkIconFilename, perkOwnerPortraitFilename, wikiapi) {
         this.perkID = perkID;
+        this.name = perkName;
+        this.owner = perkOwner;
+        this.cost = perkCost;
+        this.iconFilename = perkIconFilename;
+        this.ownerPortraitFilename = perkOwnerPortraitFilename;
         this.wikiapi = wikiapi;
     }
 
@@ -10,31 +15,21 @@ class Perk {
         return this.perkID;
     }
 
-    async getName() {
-        if (this.name === undefined)
-            this.name = await this.wikiapi.expandtemplates('sos_perk_name', [this.perkID]);
-        
+    getName() {
         return this.name;
     }
 
-    async getOwner() {
-        if (this.owner === undefined)
-            this.owner = await this.wikiapi.expandtemplates('sos_perk_unique', [this.perkID]);
-
+    getOwner() {
         return this.owner;
     }
 
-    async getCost() {
-        if (this.cost === undefined)
-            this.cost = await this.wikiapi.expandtemplates('sos_perk_cost', [this.perkID]);
-        
+    getCost() {
         return this.cost;
     }
 
     async getTeachableImage() {
         if (this.teachable_image === undefined) {
-            const fileName = await this.wikiapi.expandtemplates('sos_perk_image', [this.perkID]);
-            this.teachable_image = await this.wikiapi.imageinfo('File:' + fileName, 'url');
+            this.teachable_image = await this.wikiapi.imageinfo('File:' + this.iconFilename, 'url');
         }
 
         return this.teachable_image;
@@ -42,8 +37,7 @@ class Perk {
 
     async getOwnerImage() {
         if (this.owner_image === undefined) {
-            const fileName = await this.wikiapi.expandtemplates('sos_char_image', [this.perkID]);
-			this.owner_image = await this.wikiapi.imageinfo('File:' + fileName, 'url');
+			this.owner_image = await this.wikiapi.imageinfo('File:' + this.ownerPortraitFilename, 'url');
 		}
 
         return this.owner_image;

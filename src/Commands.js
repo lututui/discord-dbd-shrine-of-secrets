@@ -64,16 +64,23 @@ function cmdShrine(channel, id, perk_list) {
     }
 
     perkInfoListBuild(perk_list).then(perkInfoList => {
-        perkInfoList.forEach(perkInfo => {
-            const re = new RichEmbed();
+        if (perkInfoList) {
+            perkInfoList.forEach(perkInfo => {
+                const re = new RichEmbed();
 
-            re.setThumbnail(perkInfo[3], true);
-            re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perkInfo[0], Misc.getWikiURL(perkInfo[0])));
-            re.addField(T("Cost", id), perkInfo[2]);
-            re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perkInfo[1], Misc.getWikiURL(perkInfo[1])));
+                re.setThumbnail(perkInfo[3], true);
+                re.addField(T("Perk", id), Misc.hyperlinkMarkdown(perkInfo[0], Misc.getWikiURL(perkInfo[0])));
+                re.addField(T("Cost", id), perkInfo[2]);
+                re.addField(T("Unique Of", id), Misc.hyperlinkMarkdown(perkInfo[1], Misc.getWikiURL(perkInfo[1])));
 
-            channel.send(re)
-        });
+                channel.send(re)
+            });
+        } else {
+            console.log("Perk info list came back undefined");
+        }
+    }).catch(it => {
+        console.log("There was a problem getting perk data");
+        console.log(it);
     });
 }
 

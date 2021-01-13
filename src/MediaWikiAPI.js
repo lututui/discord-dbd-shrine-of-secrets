@@ -37,7 +37,11 @@ class MediaWikiAPI {
             },
         };
 
-        return this[_submit](options).then(it => { return it.expandtemplates[prop] });
+        return this[_submit](options).then(it => { 
+            console.log(options);
+            console.log(it);
+            return it.expandtemplates[prop];
+        });
     }
 
     async imageinfo(titles, iiprop) {
